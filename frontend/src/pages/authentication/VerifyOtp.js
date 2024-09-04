@@ -29,7 +29,7 @@ function VerifyOtp() {
 				navigate("/mentee/profile")
 			}
 		})
-		.catch(err => showErrorToast(err))
+		.catch(err => showErrorToast(err));
 	}
 
 	//counter functionality

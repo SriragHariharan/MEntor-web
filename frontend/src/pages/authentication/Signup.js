@@ -72,7 +72,7 @@ function Signup() {
 						alt="mentor brand logo"
 						className="mb-4"
 					/>
-					<h2 class="text-2xl mb-2">Hi, Welcome to MEntor ; )</h2>
+					<h2 class="text-2xl mb-2">Hi Mentee ; )</h2>
 					{/* login form */}
 					<form onSubmit={handleSubmit(onSubmit)}>
 						<div class="mb-4">
@@ -152,12 +152,12 @@ function Signup() {
 							)}
 						</div>
 						<div class="flex justify-between mb-4">
-							<Link to={"/mentee/login"} className="small text-blue-600 font-semibold">
+							<Link to={"/auth/login"} className="small text-blue-600 font-semibold">
 								Existing user? Login now
 								{/* <input type="checkbox" id="remember" class="mr-2" />
                         <label class="text-gray-700" for="remember">Remember me</label> */}
 							</Link>
-							<Link to={"/mentee/verify-email"} class="text-blue-500">
+							<Link to={"/auth/verify-email"} class="text-blue-500">
 								Forgot password?
 							</Link>
 						</div>

@@ -15,7 +15,7 @@ function VerifyEmail() {
 		localStorage.setItem("mentor_otp_verification_email", data.verificationEmail)
 		verifyEmail(data.verificationEmail)
 		.then(resp => {
-			navigate("/mentee/verify-password-otp")
+			navigate("/auth/verify-password-otp")
 		})
 		.catch(err => showErrorToast(err))
 	}

@@ -24,7 +24,7 @@ function VerifyPwdOtp() {
 			localStorage.clear();
 			localStorage.setItem('MEntor_temp_token', resp.data.tempToken)
 			console.log(resp.data)
-			navigate("/mentee/reset-password")
+			navigate("/auth/reset-password")
 		})
 		.catch(err => showErrorToast(err))
 	}

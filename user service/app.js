@@ -3,7 +3,6 @@ require("dotenv").config();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
-require('./helpers/redis')
 
 const app = express();
 
@@ -20,7 +19,7 @@ const AuthRoutes = require("./routes/authRoutes");
 app.use("/api/user-service/v1/", AuthRoutes);
 
 // Error handling middleware
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
     console.error(err);
     if(err.status){
         return res.status(err.status).json({message: err.message});

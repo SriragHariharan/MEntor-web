@@ -41,11 +41,21 @@ const mentorSchema = new mongoose.Schema(
 			type: String,
 			// enum: ["local", "google"],
 			default: "local",
+		},
+		otp: {
+			type: String,
+		},
+		otpExpiresAt: {
+			type: Date,
+			// This index makes the document expire after the given time.
+			expires: '2 minutes', // Replace 'x' with the desired expiration time in minutes
 		}
 	},
 	{ timestamps: true }
 );
+//create a TTL index
+mentorSchema.index({ otpExpiresAt: 1 }, { expireAfterSeconds: 0 });
 
-const User = mongoose.model("Mentor", mentorSchema);
+const Mentor = mongoose.model("Mentor", mentorSchema);
 
-module.exports = User;
+module.exports = Mentor;

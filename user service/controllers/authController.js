@@ -4,7 +4,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { publishLoginOTP, publishNewUser } = require("../helpers/kafkaProducer");
 const { generateOTP } = require("../helpers/otpGenerator");
-const redis=require('../helpers/redis')
 
 // jwt configs
 const generateToken = (secret, payload, expiry) => {
@@ -28,10 +27,9 @@ const signupUserController =  async (req, res, next) => {
         //generate otp
         const otp = generateOTP(6);
         console.log("otp generated :", otp);
-        //store otp in REDIS DB
-        redis.set(email, otp);
-        redis.expire(email, process.env.OTP_VALIDATION_TIME);
-        redis.set(`det_${email}`, JSON.stringify({username, email, role, userID:_id}));
+		const expirationTime = new Date(Date.now() + 2 * 60 * 1000);
+        //store otp in mongo DB
+		await User.updateOne({email}, {$set:{ otp: otp, otpExpiresAt: expirationTime }})
         //send otp to the email service below
 		publishLoginOTP(email, otp)
 		//returning a reponse
@@ -58,10 +56,10 @@ const signupMentorController =  async (req, res, next) => {
         //generate otp
         const otp = generateOTP(6);
         console.log("otp generated :", otp);
-        //store otp in REDIS DB
-        redis.set(email, otp);
-        redis.expire(email, process.env.OTP_VALIDATION_TIME);
-        redis.set(`det_${email}`, JSON.stringify({username, email, role, userID:_id}));
+        //store otp in mongoDB
+        const expirationTime = new Date(Date.now() + 2 * 60 * 1000);
+        //store otp in mongo DB
+		await Mentor.updateOne({email}, {$set:{ otp: otp, otpExpiresAt: expirationTime }})
         //send otp to the email service below
 		publishLoginOTP(email, otp)
 		//returning a reponse
@@ -197,7 +195,7 @@ const signupGoogleUserController =  async (req, res, next) => {
 const signupGoogleUserWithRoleController = async(req, res, next) => {
 	try {
 		console.log(req.body)
-		const tokenDecoded = await jwt.verify(req.body.token, process.env.TEMP_TOKEN_SECRET);
+		const tokenDecoded = jwt.verify(req.body.token, process.env.TEMP_TOKEN_SECRET);
 		await User.updateOne({email:tokenDecoded.email}, {$set: {role:req.body.role}});
 		
 		let user = await User.findOne({email: tokenDecoded.email});
@@ -219,23 +217,19 @@ const signupGoogleUserWithRoleController = async(req, res, next) => {
 //verify otp send
 const verifyOtpController = async (req, res, next) => {
     try {
-        const {email, otp} = req.body;
-        const otpFromRedis =await redis.get(email);
-        console.log("call recieved at otp route : " + otpFromRedis, otp, email)
-        if(otp !== otpFromRedis){
-            return next({status: 401, message:"otp invalid"});
+        const { email, otp } = req.body;
+        const userDetails = await User.findOne({email}) ?? await Mentor.findOne({email});
+		console.log(userDetails, "UD")
+        if(otp !== userDetails?.otp){
+            return next({status: 401, message:"Invalid OTP"});
         }
-        let userDetails = await redis.get("det_"+email);
-        userDetails = JSON.parse(userDetails);
 		await User.updateOne({email: email}, {$set:{isEmailVerified: true}});
         //signup user by providing username, email and token
-        const payload = { username: userDetails?.username, email:userDetails?.email, role:userDetails?.role, userID:userDetails?.userID };
+        const payload = { username: userDetails?.username, email:userDetails?.email, role:userDetails?.role, userID:userDetails?._id };
 		//publishing message to topic for other services to get
-		publishNewUser(userDetails?.userID, userDetails?.username, userDetails?.email, userDetails?.role);
+		publishNewUser(userDetails?._id, userDetails?.username, userDetails?.email, userDetails?.role);
 
 			const accessToken = generateToken(process.env.ACCESS_TOKEN_SECRET,payload,process.env.AX_TOKEN_EXP_TIME);
-            //deleting data stored in redis 
-			await redis.del("det_"+email);
 			//returning a reponse
 			return res
 				.status(201)
@@ -250,7 +244,6 @@ const verifyOtpController = async (req, res, next) => {
 					},
 				});
     } catch (error) {
-        console.log(error);
         next(error.message)   
     }
 }
@@ -264,9 +257,13 @@ const resendOtpController = async (req, res, next) => {
         console.log("otp re-generated :", otp);
         //send otp to user via nodemailer here
 		publishLoginOTP(req.body.email, otp)
-        //store otp in REDIS DB
-        redis.set(req.body.email, otp);
-        redis.expire(email, process.env.OTP_VALIDATION_TIME);
+        //store otp in mongo DB
+         const expirationTime = new Date(Date.now() + 2 * 60 * 1000);
+        //store otp in mongo DB
+		const { email, role } = await User.findOne({email: req.body.email}, { _id:0, email:1, role:1 }) ?? await Mentor.findOne({email: req.body.email}, { _id:0, email:1, role:1 });
+		console.log("Available email", email, role);
+		role === "mentee" ? await User.updateOne({email}, {$set:{ otp: otp, otpExpiresAt: expirationTime }}) : await Mentor.updateOne({email}, {$set:{ otp: otp, otpExpiresAt: expirationTime }})
+		//
         return res.status(200).json({success:true, message:"OTP sent to registered email"})
     } catch (error) {
         next(error.message);
@@ -285,9 +282,11 @@ const verifyEmailController = async (req, res, next) => {
         console.log("otp generated :", otp);
         //send otp to user via nodemailer here
 		publishLoginOTP(userDetails?.email, otp);
-        //store otp in REDIS DB
-        redis.set(userDetails?.email, otp);
-        redis.expire(userDetails?.email, 60);
+        const expirationTime = new Date(Date.now() + 2 * 60 * 1000);
+        //store otp in mongo DB
+		const { email, role } = await User.findOne({email: req.body.email}, { _id:0, email:1, role:1 }) ?? await Mentor.findOne({email: req.body.email}, { _id:0, email:1, role:1 });
+		console.log("Available email", email, role);
+		role === "mentee" ? await User.updateOne({email}, {$set:{ otp: otp, otpExpiresAt: expirationTime }}) : await Mentor.updateOne({email}, {$set:{ otp: otp, otpExpiresAt: expirationTime }})
         return res.status(200).json({success:true, message:"OTP sent to registered email"})
 	} catch (error) {
 		next(error.message);
@@ -298,10 +297,9 @@ const verifyEmailController = async (req, res, next) => {
 const verifyOtpSendFromForgotPasswordController = async(req, res, next) => {
 	try {
 		const {email, otp} = req.body;
-        const otpFromRedis =await redis.get(email);
-        console.log("call recieved at otp route : " + otpFromRedis, otp, email)
-        if(otp !== otpFromRedis){
-            return next({status: 401, message:"otp invalid"});
+        const userDetails = await User.findOne({email}) ?? await Mentor.findOne({email});
+        if(otp !== userDetails?.otp){
+            return next({status: 401, message:"Invalid OTP"});
         }
 		//send a temporary token encapulating user email
 		const payload = { email };

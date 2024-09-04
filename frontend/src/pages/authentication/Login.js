@@ -30,7 +30,7 @@ function Login() {
 				dispatch(loginUserAction(resp.data))
 				navigate(`/${resp?.data?.data?.role}/profile`)	
 			})
-			.catch((err) => console.log(err))
+			.catch((err) => showErrorToast(err))
 	};
 
 //google login logic
@@ -115,12 +115,15 @@ function Login() {
 							{errors.password?.type === "minLength" && (<p style={{ color: "red" }}>Password should me 6 or more characters</p>)}
 						</div>
 						<div class="flex justify-between mb-4">
-							<Link to={"/mentee/signup"} className="text-blue-600 font-semibold">
-								New user? register now
-								{/* <input type="checkbox" id="remember" class="mr-2" />
-                        <label class="text-gray-700" for="remember">Remember me</label> */}
-							</Link>
-							<Link to={"/mentee/verify-email"} class="text-blue-500">Forgot password?</Link>
+							<div className="flex flex-col gap-y-2">
+								<Link to={"/auth/mentee"} className="text-blue-600 font-semibold">
+									New User? register now
+								</Link>
+								<Link to={"/auth/mentor"} className="text-blue-600 font-semibold">
+									New Mentor? register now
+								</Link>
+							</div>
+							<Link to={"/auth/verify-email"} class="text-blue-500">Forgot password?</Link>
 						</div>
 						<button
 							type="submit"

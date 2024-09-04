@@ -15,12 +15,12 @@ function ResetPassword() {
 		.then(resp => {
 			console.log("resp :::", resp)
 			showSuccessToast(resp.message);
-			navigate("/mentee/login");
+			navigate("/auth/login");
 			return
 		})
 		.catch(err => {
 			showErrorToast(err);
-			navigate("/mentee/verify-email")
+			navigate("/auth/verify-email")
 		})
 	}
 
