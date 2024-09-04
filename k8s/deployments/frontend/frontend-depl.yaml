@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mentor-frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mentor-frontend-service
+  template:
+    metadata:
+      labels:
+        app: mentor-frontend-service
+    spec:
+      containers:
+      - name: mentor-frontend-service
+        image: sriraghariharan/mentor-frontend-image
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: frontend-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mentor-frontend-service
+spec:
+  selector:
+    app: mentor-frontend-service
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000

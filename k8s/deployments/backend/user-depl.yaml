@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mentor-user-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mentor-user-service
+  template:
+    metadata:
+      labels:
+        app: mentor-user-service
+    spec:
+      containers:
+      - name: mentor-user-service
+        image: sriraghariharan/mentor-user-service-image
+        ports:
+        - containerPort: 6001
+        envFrom:
+        - configMapRef:
+            name: user-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mentor-user-service
+spec:
+  selector:
+    app: mentor-user-service
+  ports:
+  - protocol: TCP
+    port: 6001
+    targetPort: 6001

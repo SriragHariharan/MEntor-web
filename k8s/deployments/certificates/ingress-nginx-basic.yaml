@@ -1,0 +1,89 @@
+# Apply this file to the GKE at first to get the IP address
+# then put th IP address on the A section of the DNS provider
+# Check for connectivity from the browser.
+
+# once connection to the domain is established then delete this file by giving the command
+#  > kubectl delete ingress ingress-controller
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-controller
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: "nginx"
+  rules:
+    - host: "" # Match all hosts
+      http:
+        paths:
+          - path: /api/user-service/v1/
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-user-service
+                port:
+                  number: 6001
+          - path: /api/profile-service/v1/
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-profile-service
+                port:
+                  number: 6002
+          - path: /api/interview-service/v1/
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-interview-service
+                port:
+                  number: 6004
+          - path: /api/webinar-service/v1/
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-webinar-service
+                port:
+                  number: 6005
+          - path: /socket.io
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-chat-service
+                port:
+                  number: 6006
+          - path: /api/chat-service/v1/
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-chat-service
+                port:
+                  number: 6006
+          - path: /api/payment-service/v1/
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-payment-service
+                port:
+                  number: 6007
+          - path: /api/email-service/v1/
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-email-service
+                port:
+                  number: 6008
+          - path: /api/notification-service/v1/
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-notification-service
+                port:
+                  number: 6009
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-frontend-service
+                port:
+                  number: 3000

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mentor-interview-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mentor-interview-service
+  template:
+    metadata:
+      labels:
+        app: mentor-interview-service
+    spec:
+      containers:
+      - name: mentor-interview-service
+        image: sriraghariharan/mentor-interview-service-image
+        ports:
+        - containerPort: 6004
+        envFrom:
+        - configMapRef:
+            name: interview-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mentor-interview-service
+spec:
+  selector:
+    app: mentor-interview-service
+  ports:
+  - protocol: TCP
+    port: 6004
+    targetPort: 6004

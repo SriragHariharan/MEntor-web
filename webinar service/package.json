@@ -1,0 +1,27 @@
+{
+  "name": "webinar-service",
+  "version": "1.0.0",
+  "description": "A service to manage webinars.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app",
+    "dev": "nodemon app"
+  },
+  "author": "Srirag H (sriraghariharan108@gmail.com)",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.617.0",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-fileupload": "^1.5.1",
+    "jsonwebtoken": "^9.0.2",
+    "kafkajs": "^2.2.4",
+    "mongoose": "^8.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

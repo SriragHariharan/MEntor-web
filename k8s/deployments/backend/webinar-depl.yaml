@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mentor-webinar-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mentor-webinar-service
+  template:
+    metadata:
+      labels:
+        app: mentor-webinar-service
+    spec:
+      containers:
+        - name: mentor-webinar-service
+          image: sriraghariharan/mentor-webinar-service-image
+          envFrom:
+            - configMapRef:
+                name: webinar-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mentor-webinar-service
+spec:
+  selector:
+    app: mentor-webinar-service
+  ports:
+    - protocol: TCP
+      port: 6005
+      targetPort: 6005

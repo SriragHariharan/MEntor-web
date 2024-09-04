@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mentor-payment-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mentor-payment-service
+  template:
+    metadata:
+      labels:
+        app: mentor-payment-service
+    spec:
+      containers:
+      - name: mentor-payment-service
+        image: sriraghariharan/mentor-payment-service-image
+        ports:
+        - containerPort: 6007
+        envFrom:
+        - configMapRef:
+            name: payment-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mentor-payment-service
+spec:
+  selector:
+    app: mentor-payment-service
+  ports:
+  - protocol: TCP
+    port: 6007
+    targetPort: 6007

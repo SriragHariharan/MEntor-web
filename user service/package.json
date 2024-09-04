@@ -1,0 +1,24 @@
+{
+  "name": "user-management-service",
+  "version": "1.0.0",
+  "description": "A microservice app designed to manage the users of the application. Manages mentor, mentee, admin login, signup & login. Generates jwt based on authentication and send it to browser.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Srirag H",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "kafkajs": "^2.2.4",
+    "mongoose": "^8.4.4",
+    "redis": "^4.6.14"
+  }
+}

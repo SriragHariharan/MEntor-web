@@ -1,0 +1,106 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-controller
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "http://mentorind.xyz, https://mentorind.xyz"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/websocket-services: "mentor-frontend-service"
+spec:
+  ingressClassName: "nginx"
+  rules:
+    - host: mentorind.xyz
+      http:
+        paths:
+          - path: /.well-known/acme-challenge/
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: cm-acme-http-solver-6sl5f 
+                port:
+                  number: 8089
+          - path: /api/user-service/v1/
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-user-service
+                port:
+                  number: 6001
+          - path: /api/profile-service/v1/
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-profile-service
+                port:
+                  number: 6002
+          - path: /api/interview-service/v1/
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-interview-service
+                port:
+                  number: 6004
+          - path: /api/webinar-service/v1/
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-webinar-service
+                port:
+                  number: 6005
+          - path: /socket.io
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-chat-service
+                port:
+                  number: 6006
+          - path: /api/chat-service/v1/
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-chat-service
+                port:
+                  number: 6006
+          - path: /api/payment-service/v1/
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-payment-service
+                port:
+                  number: 6007
+          - path: /api/email-service/v1/
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-email-service
+                port:
+                  number: 6008
+          - path: /api/notification-service/v1/
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-notification-service
+                port:
+                  number: 6009
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-frontend-service
+                port:
+                  number: 3000
+          - path: /ws
+            pathType: Prefix
+            backend:
+              service:
+                name: mentor-frontend-service
+                port:
+                  number: 3000
+  tls:
+    - hosts:
+        - mentorind.xyz
+      secretName: mentor-tls-certificate03092024.1706
