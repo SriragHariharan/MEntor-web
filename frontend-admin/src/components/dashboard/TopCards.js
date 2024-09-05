@@ -20,7 +20,7 @@ function TopCards({ webinars }) {
         axios.get(ENDPOINTS.MEETINGS_COUNT)
         .then(resp => setInterviews(resp?.data?.data))
         .catch(err => console.log(err));
-    },[])
+    },[axios])
 
   return (
         <div className="flex items-center justify-center">

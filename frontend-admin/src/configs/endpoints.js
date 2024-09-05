@@ -1,6 +1,6 @@
 
 const USER_SERVICE_BASE_URL =       "https://mentorind.xyz/api/user-service/v1"
-const PROFILE_SERVICE_BASE_URL =    "https://mentorind.xyz/api/profile-service/v1"
+//const PROFILE_SERVICE_BASE_URL =    "https://mentorind.xyz/api/profile-service/v1"
 const INTERVIEW_SERVICE_BASE_URL =  "https://mentorind.xyz/api/interview-service/v1"
 const WEBINAR_SERVICE_BASE_URL =    "https://mentorind.xyz/api/webinar-service/v1"
 const PAYMENT_SERVICE_BASE_URL =    "https://mentorind.xyz/payment-service/api/v1"

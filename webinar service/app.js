@@ -14,7 +14,7 @@ app.use(fileUpload());
 
 //cors
 app.use(cors({
-  origin:process.env.FRONTEND_URL,
+  origin: [process.env.FRONTEND_URL, process.env.FRONTEND_ADMIN_URL],
   credentials: true
 }));
 

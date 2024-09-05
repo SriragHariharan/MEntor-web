@@ -14,7 +14,7 @@ function AccountModal({ transactionID, setModalOpen, mentorID, setTransferStatus
         .catch(err => console.log(err?.response?.data?.message))
 
         return () => setAccount(null);
-    }, []);
+    }, [mentorID]);
 
     const handleMarkAsTransfered = () => {
         alert("Are you sure you want to mark this transaction as transfered?");
