@@ -37,15 +37,10 @@ const userSchema = new mongoose.Schema(
 		},
 		otpExpiresAt: {
 			type: Date,
-			// This index makes the document expire after the given time.
-			expires: '2 minutes', // Replace 'x' with the desired expiration time in minutes
 		}
 	},
 	{ timestamps: true }
 );
-
-// Create TTL index
-userSchema.index({ otpExpiresAt: 1 }, { expireAfterSeconds: 0 });
 
 const User = mongoose.model("User", userSchema);
 

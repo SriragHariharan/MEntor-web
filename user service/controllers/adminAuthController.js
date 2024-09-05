@@ -5,13 +5,11 @@ const jwt = require("jsonwebtoken");
 
 const loginAdminController = async(req, res, next) => {
     try {
-        console.log("req.body: " + req.body.email, req.body.password);
         const { email, password } = req.body;
         if(email !== process.env.ADMIN_EMAIL){
             return next("Invalid login credentials");
         }
         const isPasswordValid = bcrypt.compare(password, process.env.ADMIN_PASSWORD);
-        console.log("isPasswordValid ::: " + isPasswordValid, password, process.env.ADMIN_PASSWORD);
         if (!isPasswordValid) return next("Invalid login credentials");
         
         //Generate a JWT token valid for 10 minutes
@@ -27,7 +25,6 @@ const getMentorMenteeCount = async (_req, res, next) => {
     try {
         let mentorArray = await Mentor.find({});
         let menteeArray = await User.find({});
-        console.log(mentorArray?.length, menteeArray?.length);
         return res.status(200).json({ success: true, data:{mentor: mentorArray.length, mentee: menteeArray.length} });
     } catch (error) {
         next(error.message);
@@ -80,7 +77,6 @@ const blockMentorController = async (req, res, next) => {
     try {
         const { userID } = req.body;
         let updatedResp = await Mentor.updateOne({_id:userID},{$set:{accountBlocked:req.body.status}});
-        //console.log(req.body, updatedResp)
         if(updatedResp.modifiedCount !== 1){
             return next("Nothing to approve")
         }
@@ -92,10 +88,8 @@ const blockMentorController = async (req, res, next) => {
 
 const blockMenteeController = async (req, res, next) => {
     try {
-        console.log("Call reached here...")
         const { userID, status } = req.body;
         let updatedResp = await User.updateOne({_id:userID},{$set:{accountBlocked: status}});
-        console.log(req.body, updatedResp)
         if(updatedResp.modifiedCount !== 1){
             return next("Nothing to approve");
         }

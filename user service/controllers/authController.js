@@ -39,7 +39,7 @@ const signupUserController =  async (req, res, next) => {
 	} catch (error) {
 		next(error.message);
 	}
-}
+};
 
 //signpup a new mentor
 const signupMentorController =  async (req, res, next) => {
