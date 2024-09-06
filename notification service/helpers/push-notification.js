@@ -26,18 +26,26 @@ const sendPushNotification = (fcmToken, title, body) => {
 
 //send notification recieved from other services
 const sendCustomNotification = async(jsonData) => {
-    console.log("from other service",jsonData);
-    const { title, message, recieverID } = jsonData;
-    //userID, title, body 
-    const { token } = await Notification.findOne({ userId: recieverID}, {_id:0, token:1});
-    console.log(token, "FCM token");
-    token && sendPushNotification(token, title, message)
+    try {
+        console.log("from other service",jsonData);
+        const { title, message, recieverID } = jsonData;
+        //userID, title, body 
+        const { token } = await Notification.findOne({ userId: recieverID}, {_id:0, token:1}) ?? null;
+        console.log(token, "FCM token");
+        token && sendPushNotification(token, title, message)
+    } catch (error) {
+        console.log("custom notif error : ", error)        
+    }
 };
 
 //send server notification
 const sendServerNotification = async(userID, title, body) => {
-    const { token } = await Notification.findOne({ userId: userID}, {_id:0, token:1});
-    sendPushNotification(token, title, body)
+    try {
+        const { token } = await Notification.findOne({ userId: userID}, {_id:0, token:1}) ?? null;
+        token && sendPushNotification(token, title, body)
+    } catch (error) {
+        console.log("server notif error : ", error)        
+    }
 };
 
 
