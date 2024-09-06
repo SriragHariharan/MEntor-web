@@ -1,7 +1,8 @@
 const Notification = require('../models/notificationModel');
 const admin = require("firebase-admin");
+const path = require('path');
 
-const serviceAccount = require("./mentor-c7c81-firebase-adminsdk-qw5bm-c7185fec37.json");
+const serviceAccount = require(path.join(__dirname, 'firebase-fcm.json'));
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
