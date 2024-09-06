@@ -135,9 +135,6 @@ function Navbar() {
 						<Link to={"/mentee/chats"} className="flex items-center p-2 text-green-500">
 							<BsChatSquareText className="text-2xl" />
 							<span className="ms-3">Chats</span>
-							<span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
-								3
-							</span>
 						</Link>
 						<Link
 							to="/mentee/profile"
@@ -159,9 +156,6 @@ function Navbar() {
 						>
 							<AiOutlineBell className="text-2xl" />
 							<span className="ms-3">Notifications</span>
-							<span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
-								3
-							</span>
 						</Link>
 					</div>
 					<div className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
