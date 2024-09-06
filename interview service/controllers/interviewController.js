@@ -148,17 +148,28 @@ const getMentorSlotsByDateController = async(req, res, next) => {
 //know whether a status is booked or not
 const isSlotBookedController = async(req, res, next) =>{
     try {
-        console.log("api call reached...", req.body.mentorID, req.body.slotID);
+        console.log("API call reached...", req.body.mentorID, req.body.slotID);
+        
+        // Find the mentor and slot status
         let slotStatus = await Mentor.findOne(
             {
                 "userID": req.body.mentorID,
-                "slots": { $elemMatch: { _id: req.body.slotID } }
+                "slots._id": req.body.slotID  // Directly matching the slotID
             },
-            { "slots.$.isBooked": 1 }
-        )
-        return res.status(200).json({bookingStatus: slotStatus?.slots[0]?.isBooked});
+            { "slots.$": 1 } // Retrieve only the matched slot's fields
+        );
+
+        // Check if slotStatus is found and contains slots
+        if (!slotStatus || !slotStatus.slots || slotStatus.slots.length === 0) {
+            return res.status(404).json({ success: false, message: "Slot not found" });
+        }
+
+        // Return the booking status of the found slot
+        return res.status(200).json({ success: true, bookingStatus: slotStatus.slots[0].isBooked });
+        
     } catch (error) {
-        console.log(error)
+        console.error("Error in isSlotBookedController: ", error);
+        return res.status(500).json({ success: false, message: "Server error" });
     }
 }
 

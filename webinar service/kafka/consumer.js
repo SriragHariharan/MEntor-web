@@ -3,7 +3,7 @@ const { createProfile } = require('../controllers/webinarController')
 
 const kafka = new Kafka({
   clientId: 'webinar-service',
-  brokers: ['kafka-service:9092'],
+  brokers: [`${process.env.KAFKA_HOST}:9092`],
 })
 //new-user-topic
 const consumer = kafka.consumer({ groupId: 'webinar-service' })

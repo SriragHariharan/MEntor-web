@@ -52,7 +52,7 @@ spec:
                 port:
                   number: 6005
           - path: /socket.io
-            pathType: Prefix
+            pathType: Exact
             backend:
               service:
                 name: mentor-chat-service

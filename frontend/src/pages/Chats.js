@@ -9,7 +9,7 @@ import conversation from '../assets/images/Conversation-pana.png'
 
 
 import io from 'socket.io-client';
-const socket = io('http://localhost:6006');
+const socket = io(process.env.REACT_APP_DOMAIN_NAME);
 
 function Chats() {
     const [following, setFollowing] = useState([]);

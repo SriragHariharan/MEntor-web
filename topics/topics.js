@@ -2,7 +2,7 @@ const { Kafka } = require("kafkajs");
 
 const kafka = new Kafka({
 	clientId: "admin-client",
-	brokers: ["kafka-service:9092"], // Replace with your Kafka broker addresses
+	brokers: ["localhost:9092"], // Replace with your Kafka broker addresses
 });
 
 const admin = kafka.admin();

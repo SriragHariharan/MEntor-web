@@ -4,7 +4,7 @@ const { sendCustomNotification } = require('../helpers/push-notification')
 
 const kafka = new Kafka({
   clientId: 'notification-service',
-  brokers: ['kafka-service:9092'],
+  brokers: [`${process.env.KAFKA_HOST}:9092`],
 })
 //new-user-topic
 const consumer = kafka.consumer({ groupId: 'notification-service' })

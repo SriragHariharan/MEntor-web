@@ -4,7 +4,7 @@ require('./nodemailer')
 require('./mailHelpers')
 const kafka = new Kafka({
   clientId: 'my-app',
-  brokers: ['kafka-service:9092'],
+  brokers: [`${process.env.KAFKA_HOST}:9092`],
 })
 const consumer = kafka.consumer({ groupId: 'email-group' })
 

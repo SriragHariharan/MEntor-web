@@ -1,43 +1,38 @@
-name: frontend-service
+name: dockerhub-frontend-service
 
 on:
   push:
     branches: [ "main" ]
     paths: ["frontend/**"]
-
+    
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3 # checkout the repository
-
-      - name: Use Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
-
   dockerize:
     runs-on: ubuntu-latest
-    needs: [build]
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3 # checkout the repository
+      -  uses: actions/checkout@v4
+      -  run: cd frontend && docker build -t ${{ secrets.DOCKER_USERNAME }}/mentor-frontend-image .
+      -  run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+      -  run: docker push ${{secrets.DOCKER_USERNAME}}/mentor-frontend-image
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: [dockerize]
 
-      - name: Build and tag Docker image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/mentor-frontend .
-      - name: Push Docker image to Docker Hub
-        run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/mentor-frontend
+  #   steps:
+  #     - name: Set up Google Cloud SDK
+  #       uses: google-github-actions/setup-gcloud@v1
+  #       with:
+  #         service_account_key: ${{ secrets.GKE_SA_KEY }}
+  #         project_id: ${{ secrets.GKE_PROJECT_ID }}
+      
+  #     - name: Authenticate to GKE
+  #       run: |
+  #         ${{ secrets.GKE_CONNECTION_STRING }}
+
+  #     - name: Delete Existing Deployment
+  #       run: |
+  #         kubectl delete -f deployment mentor-frontend-deployment || true
+
+  #     - name: Apply New Deployment
+  #       run: |
+  #         kubectl apply -f k8s/frontend/frontend-depl.yaml

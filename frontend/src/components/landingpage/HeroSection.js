@@ -14,7 +14,7 @@ function HeroSection() {
                 Find your mentor today !
             </div>
             <div className='text-gray-500 md:mt-6'>
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consectetur, facere nisi? Quisquam, natus sit incidunt ad error alias aliquam architecto ab! Esse asperiores eveniet fugiat in quas consectetur, quo neque.
+                Hey, Accelerate your career. Gain invaluable insights, build lasting relationships, and achieve your goals faster. Our personalized mentorship platform connects you with experts who can guide your path to success.
             </div>
             <div className="flex mt-6 gap-4 md:gap-8">
               <Link to={"/auth/mentee"} type="button" class="text-white bg-green-500 hover:bg-green-600 font-medium rounded-full text-sm px-4 py-3 text-center me-2 mb-2">

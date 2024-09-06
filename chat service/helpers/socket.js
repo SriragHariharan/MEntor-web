@@ -5,8 +5,7 @@ const { publishChatNotificationToNotificationService } = require('../kafka/produ
 const socket = (expressServer) => {
     const io = new Server(expressServer, {
         cors: {
-        origin: process.env.NODE_ENV === "production" ? false : '*'
-        //["http://localhost:3000", "http://127.0.0.1:3000", "http://127.0.0.1:5500/"]
+        origin: "*"
         }
     });
 
