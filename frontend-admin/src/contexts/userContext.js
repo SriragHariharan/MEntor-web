@@ -6,9 +6,9 @@ const SignupContext = createContext();
 const SignupProvider = ({ children }) => {
     const [isSignedUp, setIsSignedUp] = useState(localStorage.getItem("MEntor_admin") ?? false);
 
-    const signup = () => {
-        localStorage.setItem("MEntor_admin", true);
-        setIsSignedUp(true);
+    const signup = (token) => {
+        localStorage.setItem("MEntor_admin", token);
+        setIsSignedUp(token);
     };
 
     const logout = () => {

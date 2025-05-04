@@ -1,9 +1,11 @@
 
-const USER_SERVICE_BASE_URL =       "https://mentorind.xyz/api/user-service/v1"
-//const PROFILE_SERVICE_BASE_URL =    "https://mentorind.xyz/api/profile-service/v1"
-const INTERVIEW_SERVICE_BASE_URL =  "https://mentorind.xyz/api/interview-service/v1"
-const WEBINAR_SERVICE_BASE_URL =    "https://mentorind.xyz/api/webinar-service/v1"
-const PAYMENT_SERVICE_BASE_URL =    "https://mentorind.xyz/api/payment-service/v1"
+const USER_SERVICE_BASE_URL =       "http://localhost:6001/api/user-service/v1"
+//const PROFILE_SERVICE_BASE_URL =    "http://localhost:6001/api/profile-service/v1"
+const INTERVIEW_SERVICE_BASE_URL =  "http://localhost:6004/api/interview-service/v1"
+const WEBINAR_SERVICE_BASE_URL =    "http://localhost:6005/api/webinar-service/v1"
+const PAYMENT_SERVICE_BASE_URL =    "http://localhost:6007/api/payment-service/v1"
+
+console.log(process.env.DEV, " dev")
 
 // Define your endpoints
 const ENDPOINTS = {

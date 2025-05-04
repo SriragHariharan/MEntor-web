@@ -18,7 +18,8 @@ function Login() {
         console.log(data);
         axiosInstance.post(ENDPOINTS.LOGIN, data)
         .then(resp => {
-            signup();
+            console.log("data::: ",resp.data?.token)
+            signup(resp.data?.token);
             navigate("/")
         })
         .catch(err => setError(err?.response?.data?.message));
